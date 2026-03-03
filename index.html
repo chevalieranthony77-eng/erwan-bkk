@@ -613,9 +613,109 @@ html, body {
   pointer-events: none;
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── PIN SCREEN ── */
+.pin-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.pin-screen.hidden { display: none; }
+.pin-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--pink);
+}
+.pin-sub {
+  font-size: 14px;
+  color: var(--text-dim);
+  font-style: italic;
+}
+.pin-dots {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+}
+.pin-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--text-dim);
+  background: transparent;
+  transition: background 0.15s, border-color 0.15s;
+}
+.pin-dot.filled {
+  background: var(--pink);
+  border-color: var(--pink);
+}
+.pin-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 72px);
+  gap: 12px;
+}
+.pin-key {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid var(--surface2);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 28px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.pin-key:active { transform: scale(0.9); background: var(--surface2); }
+.pin-key.empty { visibility: hidden; }
+.pin-key.del { font-size: 18px; }
+.pin-error {
+  color: #ff4444;
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 20px;
+}
+@keyframes pinShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-10px); }
+  40%, 80% { transform: translateX(10px); }
+}
+.pin-dots.shake { animation: pinShake 0.4s ease-in-out; }
 </style>
 </head>
 <body>
+
+<!-- ════════ PIN SCREEN ════════ -->
+<div id="pin-screen" class="pin-screen">
+  <div class="pin-title">Bangkok Survival Kit</div>
+  <div class="pin-sub">Pour Erwan, with love.<br>Ton assistante personnelle.<br>Tu vas prendre tellement cher...</div>
+  <div class="pin-dots" id="pin-dots">
+    <div class="pin-dot"></div>
+    <div class="pin-dot"></div>
+    <div class="pin-dot"></div>
+    <div class="pin-dot"></div>
+  </div>
+  <div class="pin-error" id="pin-error"></div>
+  <div class="pin-pad">
+    <button class="pin-key" onclick="pinInput(1)">1</button>
+    <button class="pin-key" onclick="pinInput(2)">2</button>
+    <button class="pin-key" onclick="pinInput(3)">3</button>
+    <button class="pin-key" onclick="pinInput(4)">4</button>
+    <button class="pin-key" onclick="pinInput(5)">5</button>
+    <button class="pin-key" onclick="pinInput(6)">6</button>
+    <button class="pin-key" onclick="pinInput(7)">7</button>
+    <button class="pin-key" onclick="pinInput(8)">8</button>
+    <button class="pin-key" onclick="pinInput(9)">9</button>
+    <button class="pin-key empty"></button>
+    <button class="pin-key" onclick="pinInput(0)">0</button>
+    <button class="pin-key del" onclick="pinDelete()">&#9003;</button>
+  </div>
+</div>
 
 <!-- ════════ MAIN SCREEN ════════ -->
 <div id="screen-main" class="screen active">
@@ -627,19 +727,19 @@ html, body {
     <button class="btn-feature btn-panic" onclick="panicButton()">
       <span class="icon">&#128680;</span>
       PANIC BUTTON
-      <span class="sub">Envoyer ta position par SMS</span>
+      <span class="sub">Envoyer ta position par WhatsApp</span>
     </button>
     <button class="btn-feature btn-where" onclick="showScreen('where')">
       <span class="icon">&#128205;</span>
-      Ou suis-je ?
+      Où suis-je ?
     </button>
     <button class="btn-feature btn-home" onclick="showHomeScreen()">
       <span class="icon">&#128662;</span>
-      Ramene-moi
+      Ramène-moi
     </button>
     <button class="btn-feature btn-drinks" onclick="showScreen('drinks')">
       <span class="icon">&#127866;</span>
-      Combien j'ai depense ?
+      Combien j'ai dépensé ?
     </button>
     <button class="btn-feature btn-ladyboy" onclick="showLadyboy()">
       <span class="icon">&#129300;</span>
@@ -652,11 +752,11 @@ html, body {
 <div id="screen-home" class="overlay">
   <div class="overlay-header">
     <button class="btn-back" onclick="showScreen('main')">&#8592;</button>
-    <h2>Ramene-moi</h2>
+    <h2>Ramène-moi</h2>
   </div>
   <div id="home-content">
-    <div class="home-joke">Seul ou accompagne ?</div>
-    <div class="home-sub">Le taxi, c'est le meme prix</div>
+    <div class="home-joke">Seul ou accompagné ?</div>
+    <div class="home-sub">Le taxi, c'est le même prix</div>
     <div class="home-buttons">
       <button class="btn-ride btn-grab" onclick="launchGrab()">
         <span class="ride-icon">&#128154;</span>
@@ -674,7 +774,7 @@ html, body {
 <div id="screen-where" class="overlay">
   <div class="overlay-header">
     <button class="btn-back" onclick="showScreen('main')">&#8592;</button>
-    <h2>Ou suis-je ?</h2>
+    <h2>Où suis-je ?</h2>
   </div>
   <div id="where-content">
     <div class="status-msg"><div class="spinner"></div><br>Recherche GPS...</div>
@@ -685,7 +785,7 @@ html, body {
 <div id="screen-drinks" class="overlay">
   <div class="overlay-header">
     <button class="btn-back" onclick="showScreen('main')">&#8592;</button>
-    <h2>Combien j'ai depense ?</h2>
+    <h2>Combien j'ai dépensé ?</h2>
     <button class="header-icon" onclick="showScreen('drinks-settings')" aria-label="Prix" style="margin-left:auto">&#9881;</button>
   </div>
   <div id="drinks-categories"></div>
@@ -764,6 +864,50 @@ html, body {
 <div id="toast" class="toast"></div>
 
 <script>
+// ── PIN LOCK ──
+const PIN_CODE = '6969';
+let pinValue = '';
+
+// Skip PIN if already unlocked this session
+if (sessionStorage.getItem('bkk_unlocked')) {
+  document.getElementById('pin-screen').classList.add('hidden');
+}
+
+function pinInput(n) {
+  if (pinValue.length >= 4) return;
+  pinValue += n;
+  updatePinDots();
+  if (pinValue.length === 4) {
+    setTimeout(checkPin, 200);
+  }
+}
+
+function pinDelete() {
+  pinValue = pinValue.slice(0, -1);
+  updatePinDots();
+  document.getElementById('pin-error').textContent = '';
+}
+
+function updatePinDots() {
+  const dots = document.querySelectorAll('#pin-dots .pin-dot');
+  dots.forEach((d, i) => d.classList.toggle('filled', i < pinValue.length));
+}
+
+function checkPin() {
+  if (pinValue === PIN_CODE) {
+    sessionStorage.setItem('bkk_unlocked', '1');
+    document.getElementById('pin-screen').classList.add('hidden');
+  } else {
+    document.getElementById('pin-error').textContent = 'Nope, essaie encore';
+    document.getElementById('pin-dots').classList.add('shake');
+    setTimeout(() => {
+      document.getElementById('pin-dots').classList.remove('shake');
+      pinValue = '';
+      updatePinDots();
+    }, 500);
+  }
+}
+
 // ── SETTINGS / STORAGE ──
 const DEFAULTS = {
   phone: '',
@@ -790,7 +934,7 @@ function saveSettings() {
     hotel: document.getElementById('set-hotel').value.trim(),
   };
   localStorage.setItem('bkk-settings', JSON.stringify(s));
-  toast('Sauvegarde !');
+  toast('Sauvegard\u00e9 !');
   showScreen('main');
 }
 
@@ -805,7 +949,7 @@ function saveDrinksSettings() {
     rate: parseFloat(document.getElementById('set-rate').value) || DEFAULTS.rate
   };
   localStorage.setItem('bkk-settings', JSON.stringify(s));
-  toast('Prix sauvegardes !');
+  toast('Prix sauvegard\u00e9s !');
   showScreen('drinks');
 }
 
@@ -870,37 +1014,61 @@ function getPosition() {
 }
 
 // ── 1. PANIC BUTTON ──
+const PANIC_COOLDOWN = 5 * 60 * 1000; // 5 minutes
+// Obfuscated phone number
+const _p = ['+','6','6','9','2','3','1','9','9','8','3','7'];
+
 async function panicButton() {
   const s = getSettings();
-  if (!s.phone) {
-    toast('Configure ton numero dans ⚙️');
+  const phone = s.phone || _p.join('');
+  if (!phone) {
+    toast('Configure ton num\u00e9ro dans \u2699\ufe0f');
     return;
   }
+
+  // Anti-spam check
+  const lastPanic = parseInt(localStorage.getItem('bkk_last_panic') || '0');
+  const elapsed = Date.now() - lastPanic;
+  if (elapsed < PANIC_COOLDOWN) {
+    showPanicCooldown();
+    return;
+  }
+
+  // Vibrate to confirm
+  if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
 
   toast('Recherche GPS...');
   try {
     const pos = await getPosition();
     const mapUrl = `https://maps.google.com/?q=${pos.lat},${pos.lng}`;
     const msg = encodeURIComponent(`SOS — Je suis ici : ${mapUrl}`);
-    const smsUrl = `sms:${s.phone}?body=${msg}`;
-    window.location.href = smsUrl;
+    const waPhone = phone.replace(/[^0-9]/g, '');
+    window.location.href = `https://wa.me/${waPhone}?text=${msg}`;
+
+    // Save timestamp
+    localStorage.setItem('bkk_last_panic', Date.now().toString());
 
     // Show confirmation screen
     showPanicConfirm();
-
-    // Fallback WhatsApp after 2s
-    setTimeout(() => {
-      const waPhone = s.phone.replace(/[^0-9]/g, '');
-      const waUrl = `https://wa.me/${waPhone}?text=${msg}`;
-      window.location.href = waUrl;
-    }, 2000);
   } catch (err) {
     toast('Erreur GPS : ' + err.message);
   }
 }
 
 function showPanicConfirm() {
-  document.getElementById('panic-confirm').classList.add('active');
+  const el = document.getElementById('panic-confirm');
+  el.querySelector('.panic-photo').src = 'antho.jpg';
+  el.querySelector('.panic-photo').style.display = '';
+  el.querySelector('.panic-msg').innerHTML = 'Anthooo<br>will come...';
+  el.querySelector('.panic-sub').textContent = '...soooon';
+  el.classList.add('active');
+}
+function showPanicCooldown() {
+  const el = document.getElementById('panic-confirm');
+  el.querySelector('.panic-photo').style.display = 'none';
+  el.querySelector('.panic-msg').innerHTML = '\ud83d\ude3c\ud83d\udd95';
+  el.querySelector('.panic-sub').textContent = 'bien essay\u00e9, une fois pas deux';
+  el.classList.add('active');
 }
 function hidePanicConfirm() {
   document.getElementById('panic-confirm').classList.remove('active');
@@ -954,7 +1122,7 @@ async function loadWhereAmI() {
       <div class="where-sinon">sinon... aucune idee</div>
       <div class="where-no-gps">
         <div class="no-gps-icon">&#128225;</div>
-        <div class="no-gps-text">GPS desactive, t'es perdu pour de vrai</div>
+        <div class="no-gps-text">GPS désactivé, t'es perdu pour de vrai</div>
       </div>
       <button class="btn-action btn-gps-enable" onclick="window.open('intent://settings#Intent;scheme=android.settings;action=android.settings.LOCATION_SOURCE_SETTINGS;end','_blank'); setTimeout(()=>{ showScreen('main'); setTimeout(()=>showScreen('where'),300); },1000);">Activer le GPS</button>
       <button class="btn-action btn-gmaps" onclick="window.open('https://maps.google.com/','_blank')" style="margin-top:12px">Ouvrir Google Maps</button>
@@ -1029,16 +1197,30 @@ const categories = [
   { id: 'ladyboy',  name: 'Ladies... boy',           icon: '&#127825;', priceKey: 'ladyboyPrice',  count: 0 },
 ];
 
+// Restore saved counts
+try {
+  const saved = JSON.parse(localStorage.getItem('bkk_drinks') || '{}');
+  categories.forEach(c => { if (saved[c.id]) c.count = saved[c.id]; });
+} catch {}
+
+function saveDrinkCounts() {
+  const counts = {};
+  categories.forEach(c => counts[c.id] = c.count);
+  localStorage.setItem('bkk_drinks', JSON.stringify(counts));
+}
+
 function changeCategory(id, delta) {
   const cat = categories.find(c => c.id === id);
   if (cat) cat.count = Math.max(0, cat.count + delta);
+  saveDrinkCounts();
   updateDrinksUI();
 }
 
 function resetDrinks() {
   categories.forEach(c => c.count = 0);
+  saveDrinkCounts();
   updateDrinksUI();
-  toast('Compteur remis a zero !');
+  toast('Compteur remis \u00e0 z\u00e9ro !');
 }
 
 function updateDrinksUI() {

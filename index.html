@@ -205,7 +205,183 @@ html, body {
   color: var(--text-dim);
 }
 
+/* ── WHERE JOKE ── */
+.where-joke {
+  font-size: 32px;
+  font-weight: 900;
+  text-align: center;
+  color: var(--pink);
+  padding: 20px 0 8px;
+}
+.where-sinon {
+  font-size: 16px;
+  color: var(--text-dim);
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.where-map {
+  width: 100%;
+  height: 200px;
+  border-radius: var(--radius);
+  border: 2px solid var(--surface2);
+  margin-bottom: 16px;
+}
+.where-no-gps {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 30px 16px;
+  margin-bottom: 20px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 2px dashed var(--surface2);
+}
+.no-gps-icon { font-size: 48px; }
+.no-gps-text {
+  font-size: 16px;
+  color: var(--text-dim);
+  text-align: center;
+  font-style: italic;
+}
+.btn-gps-enable {
+  background: #ff9800 !important;
+  color: #000 !important;
+  font-weight: 800 !important;
+}
+
+/* ── TAKE ME HOME ── */
+.home-joke {
+  font-size: 28px;
+  font-weight: 900;
+  text-align: center;
+  color: var(--pink);
+  padding: 30px 0 8px;
+}
+.home-sub {
+  font-size: 16px;
+  color: var(--text-dim);
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 32px;
+}
+.home-buttons {
+  display: flex;
+  gap: 16px;
+  padding: 0 16px;
+}
+.btn-ride {
+  flex: 1;
+  padding: 24px 12px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 22px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.15s;
+}
+.btn-ride:active { transform: scale(0.95); }
+.ride-icon { font-size: 40px; }
+.btn-grab {
+  background: #00b14f;
+  color: #fff;
+}
+.btn-bolt {
+  background: #34d186;
+  color: #000;
+}
+
 /* ── DRINKS ── */
+.hell-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 16px;
+  margin-top: 12px;
+  background: linear-gradient(135deg, #ff4444 0%, #cc0000 50%, #ff4444 100%);
+  background-size: 200% 200%;
+  animation: hellBg 2s ease infinite;
+  border-radius: var(--radius);
+  border: 2px solid #ff6666;
+  overflow: hidden;
+  position: relative;
+}
+@keyframes hellBg {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.hell-photo-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hell-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  animation: hellShake 0.4s ease-in-out infinite;
+  z-index: 1;
+}
+@keyframes hellShake {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+.hell-flames {
+  position: absolute;
+  font-size: 30px;
+  line-height: 1;
+  z-index: 0;
+  animation: hellFloat 1s ease-in-out infinite;
+}
+.hell-flames.left { left: -30px; top: -5px; animation-delay: 0.2s; }
+.hell-flames.right { right: -30px; top: -5px; animation-delay: 0.5s; }
+.hell-flames.top { top: -25px; animation-delay: 0.8s; }
+@keyframes hellFloat {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 1; }
+  50% { transform: translateY(-8px) scale(1.2); opacity: 0.7; }
+}
+.hell-text {
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(255,200,0,0.6);
+  animation: hellPulse 1.5s ease-in-out infinite;
+}
+@keyframes hellPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+.hell-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+  font-style: italic;
+}
+.hell-emojis {
+  font-size: 20px;
+  letter-spacing: 8px;
+  animation: hellSpin 3s linear infinite;
+}
+@keyframes hellSpin {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+.hell-reveal {
+  animation: hellAppear 0.6s ease-out;
+}
+@keyframes hellAppear {
+  from { opacity: 0; transform: translateY(20px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
 .category-row {
   display: flex;
   align-items: center;
@@ -294,6 +470,61 @@ html, body {
   margin-bottom: 6px;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+/* ── PANIC CONFIRM ── */
+.panic-confirm {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: linear-gradient(180deg, #1a0a00 0%, #111 50%, #0a1a00 100%);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.panic-confirm.active { display: flex; }
+.panic-confirm-content {
+  text-align: center;
+  animation: drunkSway 3s ease-in-out infinite;
+}
+.panic-photo {
+  width: 50vw;
+  height: 50vw;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid var(--green);
+  box-shadow: 0 0 60px rgba(67,160,71,0.5);
+  animation: drunkPulse 2s ease-in-out infinite;
+}
+.panic-msg {
+  font-size: 12vw;
+  font-weight: 900;
+  color: var(--green);
+  margin-top: 24px;
+  text-shadow: 0 0 30px rgba(67,160,71,0.6);
+  letter-spacing: -1px;
+  line-height: 1.1;
+}
+.panic-sub {
+  font-size: 8vw;
+  font-weight: 700;
+  color: var(--text-dim);
+  margin-top: 8px;
+  animation: drunkBlink 1.5s ease-in-out infinite;
+  font-style: italic;
+}
+@keyframes drunkSway {
+  0%, 100% { transform: rotate(-2deg) translateX(-5px); }
+  50% { transform: rotate(2deg) translateX(5px); }
+}
+@keyframes drunkPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+@keyframes drunkBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
 
 /* ── LADYBOY ── */
@@ -402,7 +633,7 @@ html, body {
       <span class="icon">&#128205;</span>
       Ou suis-je ?
     </button>
-    <button class="btn-feature btn-home" onclick="takeHome()">
+    <button class="btn-feature btn-home" onclick="showHomeScreen()">
       <span class="icon">&#128662;</span>
       Ramene-moi
     </button>
@@ -414,6 +645,28 @@ html, body {
       <span class="icon">&#129300;</span>
       C'est un ladyboy ?
     </button>
+  </div>
+</div>
+
+<!-- ════════ TAKE ME HOME ════════ -->
+<div id="screen-home" class="overlay">
+  <div class="overlay-header">
+    <button class="btn-back" onclick="showScreen('main')">&#8592;</button>
+    <h2>Ramene-moi</h2>
+  </div>
+  <div id="home-content">
+    <div class="home-joke">Seul ou accompagne ?</div>
+    <div class="home-sub">Le taxi, c'est le meme prix</div>
+    <div class="home-buttons">
+      <button class="btn-ride btn-grab" onclick="launchGrab()">
+        <span class="ride-icon">&#128154;</span>
+        Grab
+      </button>
+      <button class="btn-ride btn-bolt" onclick="launchBolt()">
+        <span class="ride-icon">&#128993;</span>
+        Bolt
+      </button>
+    </div>
   </div>
 </div>
 
@@ -433,6 +686,7 @@ html, body {
   <div class="overlay-header">
     <button class="btn-back" onclick="showScreen('main')">&#8592;</button>
     <h2>Combien j'ai depense ?</h2>
+    <button class="header-icon" onclick="showScreen('drinks-settings')" aria-label="Prix" style="margin-left:auto">&#9881;</button>
   </div>
   <div id="drinks-categories"></div>
   <div class="grand-total">
@@ -443,11 +697,11 @@ html, body {
   <button class="btn-action btn-reset" onclick="resetDrinks()" style="margin-top:20px">Reset</button>
 </div>
 
-<!-- ════════ SETTINGS ════════ -->
+<!-- ════════ SETTINGS (urgence) ════════ -->
 <div id="screen-settings" class="overlay">
   <div class="overlay-header">
     <button class="btn-back" onclick="showScreen('main')">&#8592;</button>
-    <h2>Settings</h2>
+    <h2>Configurer</h2>
   </div>
   <div class="setting-group">
     <label>Numero d'urgence (SMS / WhatsApp)</label>
@@ -456,6 +710,15 @@ html, body {
   <div class="setting-group">
     <label>Adresse hotel / domicile</label>
     <input type="text" id="set-hotel" placeholder="123 Sukhumvit Soi 11, Bangkok">
+  </div>
+  <button class="btn-action btn-save" onclick="saveSettings()">Sauvegarder</button>
+</div>
+
+<!-- ════════ SETTINGS (drinks) ════════ -->
+<div id="screen-drinks-settings" class="overlay">
+  <div class="overlay-header">
+    <button class="btn-back" onclick="showScreen('drinks')">&#8592;</button>
+    <h2>Prix</h2>
   </div>
   <div class="setting-group">
     <label>Prix d'un drink (THB)</label>
@@ -470,14 +733,23 @@ html, body {
     <input type="number" id="set-ladydrink" placeholder="300">
   </div>
   <div class="setting-group">
-    <label>Prix "Hell what did I do???" (THB)</label>
-    <input type="number" id="set-hell" placeholder="2000">
+    <label>Prix "Ladies... boy" (THB)</label>
+    <input type="number" id="set-ladyboy" placeholder="2000">
   </div>
   <div class="setting-group">
     <label>Taux de change THB / EUR</label>
     <input type="number" id="set-rate" step="0.01" placeholder="0.026">
   </div>
-  <button class="btn-action btn-save" onclick="saveSettings()">Sauvegarder</button>
+  <button class="btn-action btn-save" onclick="saveDrinksSettings()">Sauvegarder</button>
+</div>
+
+<!-- ════════ PANIC CONFIRM ════════ -->
+<div id="panic-confirm" class="panic-confirm" onclick="hidePanicConfirm()">
+  <div class="panic-confirm-content">
+    <img src="antho.jpg" class="panic-photo">
+    <div class="panic-msg">Anthooo<br>will come...</div>
+    <div class="panic-sub">...soooon</div>
+  </div>
 </div>
 
 <!-- ════════ LADYBOY OVERLAY ════════ -->
@@ -499,7 +771,7 @@ const DEFAULTS = {
   drinkPrice: 200,
   barfinePrice: 1000,
   ladydrinkPrice: 300,
-  hellPrice: 2000,
+  ladyboyPrice: 2000,
   rate: 0.026
 };
 
@@ -511,28 +783,44 @@ function getSettings() {
 }
 
 function saveSettings() {
+  const prev = getSettings();
   const s = {
+    ...prev,
     phone: document.getElementById('set-phone').value.trim(),
     hotel: document.getElementById('set-hotel').value.trim(),
+  };
+  localStorage.setItem('bkk-settings', JSON.stringify(s));
+  toast('Sauvegarde !');
+  showScreen('main');
+}
+
+function saveDrinksSettings() {
+  const prev = getSettings();
+  const s = {
+    ...prev,
     drinkPrice: parseFloat(document.getElementById('set-price').value) || DEFAULTS.drinkPrice,
     barfinePrice: parseFloat(document.getElementById('set-barfine').value) || DEFAULTS.barfinePrice,
     ladydrinkPrice: parseFloat(document.getElementById('set-ladydrink').value) || DEFAULTS.ladydrinkPrice,
-    hellPrice: parseFloat(document.getElementById('set-hell').value) || DEFAULTS.hellPrice,
+    ladyboyPrice: parseFloat(document.getElementById('set-ladyboy').value) || DEFAULTS.ladyboyPrice,
     rate: parseFloat(document.getElementById('set-rate').value) || DEFAULTS.rate
   };
   localStorage.setItem('bkk-settings', JSON.stringify(s));
-  toast('Settings sauvegardes !');
-  showScreen('main');
+  toast('Prix sauvegardes !');
+  showScreen('drinks');
 }
 
 function loadSettingsUI() {
   const s = getSettings();
   document.getElementById('set-phone').value = s.phone;
   document.getElementById('set-hotel').value = s.hotel;
+}
+
+function loadDrinksSettingsUI() {
+  const s = getSettings();
   document.getElementById('set-price').value = s.drinkPrice;
   document.getElementById('set-barfine').value = s.barfinePrice;
   document.getElementById('set-ladydrink').value = s.ladydrinkPrice;
-  document.getElementById('set-hell').value = s.hellPrice;
+  document.getElementById('set-ladyboy').value = s.ladyboyPrice;
   document.getElementById('set-rate').value = s.rate;
 }
 
@@ -550,6 +838,11 @@ function showScreen(name) {
   } else if (name === 'drinks') {
     document.getElementById('screen-drinks').classList.add('active');
     updateDrinksUI();
+  } else if (name === 'home') {
+    document.getElementById('screen-home').classList.add('active');
+  } else if (name === 'drinks-settings') {
+    loadDrinksSettingsUI();
+    document.getElementById('screen-drinks-settings').classList.add('active');
   }
 }
 
@@ -580,8 +873,7 @@ function getPosition() {
 async function panicButton() {
   const s = getSettings();
   if (!s.phone) {
-    toast('Configure ton numéro d\'urgence dans Settings !');
-    showScreen('settings');
+    toast('Configure ton numero dans ⚙️');
     return;
   }
 
@@ -593,6 +885,9 @@ async function panicButton() {
     const smsUrl = `sms:${s.phone}?body=${msg}`;
     window.location.href = smsUrl;
 
+    // Show confirmation screen
+    showPanicConfirm();
+
     // Fallback WhatsApp after 2s
     setTimeout(() => {
       const waPhone = s.phone.replace(/[^0-9]/g, '');
@@ -602,6 +897,13 @@ async function panicButton() {
   } catch (err) {
     toast('Erreur GPS : ' + err.message);
   }
+}
+
+function showPanicConfirm() {
+  document.getElementById('panic-confirm').classList.add('active');
+}
+function hidePanicConfirm() {
+  document.getElementById('panic-confirm').classList.remove('active');
 }
 
 // ── 2. WHERE AM I ──
@@ -636,6 +938,9 @@ async function loadWhereAmI() {
     }
 
     container.innerHTML = `
+      <div class="where-joke">Dans ton cul</div>
+      <div class="where-sinon">sinon... ici :</div>
+      <iframe class="where-map" src="https://maps.google.com/maps?q=${pos.lat},${pos.lng}&z=16&output=embed" frameborder="0" loading="lazy" allowfullscreen></iframe>
       <div class="thai-address">
         <div class="addr" id="thai-text">${addrThai}</div>
         <div class="addr-en">${addrEn}</div>
@@ -644,7 +949,16 @@ async function loadWhereAmI() {
       <button class="btn-action btn-gmaps" onclick="window.open('https://maps.google.com/?q=${pos.lat},${pos.lng}','_blank')" style="margin-top:12px">Ouvrir Google Maps</button>
     `;
   } catch (err) {
-    container.innerHTML = `<div class="status-msg">Erreur GPS : ${err.message}<br><br>Vérifie les permissions de localisation.</div>`;
+    container.innerHTML = `
+      <div class="where-joke">Dans ton cul</div>
+      <div class="where-sinon">sinon... aucune idee</div>
+      <div class="where-no-gps">
+        <div class="no-gps-icon">&#128225;</div>
+        <div class="no-gps-text">GPS desactive, t'es perdu pour de vrai</div>
+      </div>
+      <button class="btn-action btn-gps-enable" onclick="window.open('intent://settings#Intent;scheme=android.settings;action=android.settings.LOCATION_SOURCE_SETTINGS;end','_blank'); setTimeout(()=>{ showScreen('main'); setTimeout(()=>showScreen('where'),300); },1000);">Activer le GPS</button>
+      <button class="btn-action btn-gmaps" onclick="window.open('https://maps.google.com/','_blank')" style="margin-top:12px">Ouvrir Google Maps</button>
+    `;
   }
 }
 
@@ -658,42 +972,61 @@ function copyAddress() {
 }
 
 // ── 3. TAKE ME HOME ──
-async function takeHome() {
+function showHomeScreen() {
   const s = getSettings();
   if (!s.hotel) {
-    toast('Configure ton adresse dans Settings !');
-    showScreen('settings');
+    toast('Configure ton adresse dans ⚙️');
     return;
   }
+  showScreen('home');
+  yellErwan();
+}
 
-  toast('Recherche GPS...');
+function yellErwan() {
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  for (let i = 0; i < 3; i++) {
+    const u = new SpeechSynthesisUtterance('Erwaaaaan!');
+    u.lang = 'th-TH';
+    u.rate = 0.6;
+    u.pitch = 0.3;
+    u.volume = 1;
+    speechSynthesis.speak(u);
+  }
+}
+
+async function launchGrab() {
+  const s = getSettings();
+  const dropoff = encodeURIComponent(s.hotel);
   try {
     const pos = await getPosition();
-    const pickupLatLng = `${pos.lat},${pos.lng}`;
-    const dropoff = encodeURIComponent(s.hotel);
+    window.location.href = `grab://open?screenType=BOOKING&pickupLatLng=${pos.lat},${pos.lng}&dropoffAddress=${dropoff}`;
+  } catch {
+    window.location.href = `grab://open?screenType=BOOKING&dropoffAddress=${dropoff}`;
+  }
+}
 
-    // Try Grab deep link first
-    const grabUrl = `grab://open?screenType=BOOKING&pickupLatLng=${pickupLatLng}&dropoffAddress=${dropoff}`;
-    window.location.href = grabUrl;
-
-    // Fallback to Google Maps after 1.5s
+async function launchBolt() {
+  const s = getSettings();
+  try {
+    const pos = await getPosition();
+    // Bolt deep link
+    window.location.href = `bolt://ride?pickup_lat=${pos.lat}&pickup_lng=${pos.lng}&dropoff_name=${encodeURIComponent(s.hotel)}`;
+    // Fallback to Bolt web
     setTimeout(() => {
-      const gmapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${pos.lat},${pos.lng}&destination=${encodeURIComponent(s.hotel)}&travelmode=driving`;
-      window.open(gmapsUrl, '_blank');
+      window.open(`https://m.bolt.eu`, '_blank');
     }, 1500);
-  } catch (err) {
-    // If GPS fails, at least open Google Maps with destination
-    const gmapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(s.hotel)}&travelmode=driving`;
-    window.open(gmapsUrl, '_blank');
+  } catch {
+    window.open(`https://m.bolt.eu`, '_blank');
   }
 }
 
 // ── 4. DRINKS COUNTER ──
 const categories = [
   { id: 'drink',    name: 'Drinks',                  icon: '&#127866;', priceKey: 'drinkPrice',    count: 0 },
-  { id: 'barfine',  name: 'Barfine',                 icon: '&#128176;', priceKey: 'barfinePrice',  count: 0 },
   { id: 'ladydrink',name: 'Lady Drink',              icon: '&#127864;', priceKey: 'ladydrinkPrice',count: 0 },
-  { id: 'hell',     name: 'Hell what did I do???',    icon: '<img src="erwan.jpg" alt="Erwan">', priceKey: 'hellPrice',     count: 0 },
+  { id: 'barfine',  name: 'Barfine',                 icon: '&#128176;', priceKey: 'barfinePrice',  count: 0 },
+  { id: 'ladyboy',  name: 'Ladies... boy',           icon: '&#127825;', priceKey: 'ladyboyPrice',  count: 0 },
 ];
 
 function changeCategory(id, delta) {
@@ -713,7 +1046,9 @@ function updateDrinksUI() {
   const container = document.getElementById('drinks-categories');
   let grandTotal = 0;
 
-  container.innerHTML = categories.map(cat => {
+  const normalCats = categories.filter(c => c.id !== 'hell');
+
+  container.innerHTML = normalCats.map(cat => {
     const price = s[cat.priceKey] || 0;
     const subtotal = cat.count * price;
     grandTotal += subtotal;
@@ -731,6 +1066,21 @@ function updateDrinksUI() {
         </div>
       </div>`;
   }).join('');
+
+  if (grandTotal > 5000) {
+    container.innerHTML += `
+      <div class="hell-banner hell-reveal">
+        <div class="hell-photo-wrap">
+          <span class="hell-flames left">&#128293;</span>
+          <img src="erwan.jpg" class="hell-photo" alt="Erwan">
+          <span class="hell-flames right">&#128293;</span>
+          <span class="hell-flames top">&#128293;</span>
+        </div>
+        <div class="hell-text">Hell what did I do???</div>
+        <div class="hell-sub">T'es pas bien Erwan...</div>
+        <div class="hell-emojis">&#128184;&#128172;&#129326;&#128561;</div>
+      </div>`;
+  }
 
   const eur = (grandTotal * s.rate).toFixed(2);
   document.getElementById('grand-total').textContent = grandTotal.toLocaleString() + ' THB';

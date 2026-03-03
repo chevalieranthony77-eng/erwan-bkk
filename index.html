@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#111111">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Bangkok Survival Kit</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #111;
+  --surface: #1a1a1a;
+  --surface2: #222;
+  --text: #f0f0f0;
+  --text-dim: #999;
+  --red: #e53935;
+  --red-dark: #b71c1c;
+  --blue: #1e88e5;
+  --green: #43a047;
+  --orange: #ff9800;
+  --purple: #8e24aa;
+  --pink: #e91e63;
+  --radius: 16px;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 18px;
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+}
+
+/* ── SCREENS ── */
+.screen {
+  display: none;
+  min-height: 100vh;
+  padding: 20px;
+  padding-bottom: 40px;
+}
+.screen.active { display: flex; flex-direction: column; }
+
+/* ── HEADER ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0 20px;
+}
+.header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.header-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background: var(--surface);
+  border-radius: 12px;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* ── MAIN GRID ── */
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+.btn-feature {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 20px;
+  border-radius: var(--radius);
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: transform 0.1s, filter 0.1s;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.btn-feature:active {
+  transform: scale(0.97);
+  filter: brightness(0.85);
+}
+.btn-feature .icon { font-size: 32px; flex-shrink: 0; }
+
+.btn-panic {
+  background: linear-gradient(135deg, var(--red), var(--red-dark));
+  padding: 32px 20px;
+  font-size: 26px;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  box-shadow: 0 4px 24px rgba(229,57,53,0.4);
+}
+.btn-panic .icon { font-size: 48px; }
+.btn-panic .sub { font-size: 14px; font-weight: 400; opacity: 0.8; margin-top: 4px; }
+
+.btn-where { background: var(--blue); }
+.btn-home { background: var(--green); }
+.btn-drinks { background: var(--orange); }
+.btn-ladyboy { background: var(--pink); }
+
+/* ── OVERLAYS ── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--bg);
+  padding: 20px;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.overlay.active { display: flex; }
+
+.overlay-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 24px;
+}
+.btn-back {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background: var(--surface);
+  border-radius: 12px;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+}
+.overlay-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* ── WHERE AM I ── */
+.thai-address {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 28px 20px;
+  text-align: center;
+  margin: 20px 0;
+}
+.thai-address .addr {
+  font-size: 28px;
+  line-height: 1.5;
+  font-weight: 700;
+  word-break: break-word;
+}
+.thai-address .addr-en {
+  font-size: 16px;
+  color: var(--text-dim);
+  margin-top: 12px;
+}
+
+.btn-action {
+  display: block;
+  width: 100%;
+  padding: 18px;
+  border-radius: var(--radius);
+  border: none;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #fff;
+  margin-top: 12px;
+  transition: transform 0.1s;
+}
+.btn-action:active { transform: scale(0.97); }
+.btn-copy { background: var(--blue); }
+.btn-grab { background: var(--green); }
+.btn-gmaps { background: var(--blue); }
+.btn-reset { background: var(--red); }
+
+.status-msg {
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 20px;
+  color: var(--text-dim);
+}
+
+/* ── DRINKS ── */
+.category-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.category-info {
+  flex: 1;
+  min-width: 0;
+}
+.category-name {
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.category-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.category-icon img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+.category-count {
+  font-size: 32px;
+  font-weight: 800;
+  min-width: 44px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.category-sub {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+.cat-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.cat-btns button {
+  width: 48px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  font-size: 22px;
+  font-weight: 800;
+  cursor: pointer;
+  color: #fff;
+  transition: transform 0.1s;
+}
+.cat-btns button:active { transform: scale(0.9); }
+.cat-btn-minus { background: var(--red); }
+.cat-btn-plus { background: var(--green); }
+
+.grand-total {
+  background: var(--surface2);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  margin-top: 8px;
+  border: 2px solid var(--orange);
+}
+.grand-total-amount {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--orange);
+}
+.grand-total-eur {
+  font-size: 18px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+.grand-total-label {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ── LADYBOY ── */
+.ladyboy-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #000;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.ladyboy-overlay.active { display: flex; }
+.ladyboy-text {
+  font-size: 30vw;
+  font-weight: 900;
+  color: #fff;
+  animation: ladyboyFlash 0.3s infinite alternate;
+}
+@keyframes ladyboyFlash {
+  0% { color: var(--pink); text-shadow: 0 0 40px var(--pink); }
+  25% { color: #ffeb3b; text-shadow: 0 0 40px #ffeb3b; }
+  50% { color: #00e5ff; text-shadow: 0 0 40px #00e5ff; }
+  75% { color: var(--green); text-shadow: 0 0 40px var(--green); }
+  100% { color: #ff5722; text-shadow: 0 0 40px #ff5722; }
+}
+
+/* ── SETTINGS ── */
+.setting-group {
+  margin-bottom: 24px;
+}
+.setting-group label {
+  display: block;
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.setting-group input {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: 2px solid var(--surface2);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 18px;
+  outline: none;
+}
+.setting-group input:focus {
+  border-color: var(--blue);
+}
+.btn-save {
+  background: var(--green);
+  margin-top: 12px;
+}
+
+/* ── GPS LOADING ── */
+.spinner {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--surface2);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--surface2);
+  color: var(--text);
+  padding: 14px 28px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 600;
+  z-index: 300;
+  transition: transform 0.3s ease;
+  pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ════════ MAIN SCREEN ════════ -->
+<div id="screen-main" class="screen active">
+  <div class="header">
+    <h1>Bangkok Survival Kit</h1>
+    <button class="header-icon" onclick="showScreen('settings')" aria-label="Settings">&#9881;</button>
+  </div>
+  <div class="grid">
+    <button class="btn-feature btn-panic" onclick="panicButton()">
+      <span class="icon">&#128680;</span>
+      PANIC BUTTON
+      <span class="sub">Envoyer ta position par SMS</span>
+    </button>
+    <button class="btn-feature btn-where" onclick="showScreen('where')">
+      <span class="icon">&#128205;</span>
+      Ou suis-je ?
+    </button>
+    <button class="btn-feature btn-home" onclick="takeHome()">
+      <span class="icon">&#128662;</span>
+      Ramene-moi
+    </button>
+    <button class="btn-feature btn-drinks" onclick="showScreen('drinks')">
+      <span class="icon">&#127866;</span>
+      Combien j'ai depense ?
+    </button>
+    <button class="btn-feature btn-ladyboy" onclick="showLadyboy()">
+      <span class="icon">&#129300;</span>
+      C'est un ladyboy ?
+    </button>
+  </div>
+</div>
+
+<!-- ════════ WHERE AM I ════════ -->
+<div id="screen-where" class="overlay">
+  <div class="overlay-header">
+    <button class="btn-back" onclick="showScreen('main')">&#8592;</button>
+    <h2>Ou suis-je ?</h2>
+  </div>
+  <div id="where-content">
+    <div class="status-msg"><div class="spinner"></div><br>Recherche GPS...</div>
+  </div>
+</div>
+
+<!-- ════════ DRINKS ════════ -->
+<div id="screen-drinks" class="overlay">
+  <div class="overlay-header">
+    <button class="btn-back" onclick="showScreen('main')">&#8592;</button>
+    <h2>Combien j'ai depense ?</h2>
+  </div>
+  <div id="drinks-categories"></div>
+  <div class="grand-total">
+    <div class="grand-total-label">Total de la soiree</div>
+    <div class="grand-total-amount" id="grand-total">0 THB</div>
+    <div class="grand-total-eur" id="grand-total-eur">0 EUR</div>
+  </div>
+  <button class="btn-action btn-reset" onclick="resetDrinks()" style="margin-top:20px">Reset</button>
+</div>
+
+<!-- ════════ SETTINGS ════════ -->
+<div id="screen-settings" class="overlay">
+  <div class="overlay-header">
+    <button class="btn-back" onclick="showScreen('main')">&#8592;</button>
+    <h2>Settings</h2>
+  </div>
+  <div class="setting-group">
+    <label>Numero d'urgence (SMS / WhatsApp)</label>
+    <input type="tel" id="set-phone" placeholder="+66812345678">
+  </div>
+  <div class="setting-group">
+    <label>Adresse hotel / domicile</label>
+    <input type="text" id="set-hotel" placeholder="123 Sukhumvit Soi 11, Bangkok">
+  </div>
+  <div class="setting-group">
+    <label>Prix d'un drink (THB)</label>
+    <input type="number" id="set-price" placeholder="200">
+  </div>
+  <div class="setting-group">
+    <label>Prix d'une barfine (THB)</label>
+    <input type="number" id="set-barfine" placeholder="1000">
+  </div>
+  <div class="setting-group">
+    <label>Prix d'un lady drink (THB)</label>
+    <input type="number" id="set-ladydrink" placeholder="300">
+  </div>
+  <div class="setting-group">
+    <label>Prix "Hell what did I do???" (THB)</label>
+    <input type="number" id="set-hell" placeholder="2000">
+  </div>
+  <div class="setting-group">
+    <label>Taux de change THB / EUR</label>
+    <input type="number" id="set-rate" step="0.01" placeholder="0.026">
+  </div>
+  <button class="btn-action btn-save" onclick="saveSettings()">Sauvegarder</button>
+</div>
+
+<!-- ════════ LADYBOY OVERLAY ════════ -->
+<div id="ladyboy-overlay" class="ladyboy-overlay" onclick="hideLadyboy()">
+  <div style="text-align:center">
+    <img src="erwan.jpg" style="width:45vw;height:45vw;border-radius:50%;object-fit:cover;border:4px solid var(--pink);margin-bottom:20px;animation:ladyboyFlash 0.3s infinite alternate;box-shadow:0 0 40px rgba(233,30,99,0.6)">
+    <div class="ladyboy-text">OUI</div>
+  </div>
+</div>
+
+<!-- ════════ TOAST ════════ -->
+<div id="toast" class="toast"></div>
+
+<script>
+// ── SETTINGS / STORAGE ──
+const DEFAULTS = {
+  phone: '',
+  hotel: '',
+  drinkPrice: 200,
+  barfinePrice: 1000,
+  ladydrinkPrice: 300,
+  hellPrice: 2000,
+  rate: 0.026
+};
+
+function getSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem('bkk-settings'));
+    return { ...DEFAULTS, ...s };
+  } catch { return { ...DEFAULTS }; }
+}
+
+function saveSettings() {
+  const s = {
+    phone: document.getElementById('set-phone').value.trim(),
+    hotel: document.getElementById('set-hotel').value.trim(),
+    drinkPrice: parseFloat(document.getElementById('set-price').value) || DEFAULTS.drinkPrice,
+    barfinePrice: parseFloat(document.getElementById('set-barfine').value) || DEFAULTS.barfinePrice,
+    ladydrinkPrice: parseFloat(document.getElementById('set-ladydrink').value) || DEFAULTS.ladydrinkPrice,
+    hellPrice: parseFloat(document.getElementById('set-hell').value) || DEFAULTS.hellPrice,
+    rate: parseFloat(document.getElementById('set-rate').value) || DEFAULTS.rate
+  };
+  localStorage.setItem('bkk-settings', JSON.stringify(s));
+  toast('Settings sauvegardes !');
+  showScreen('main');
+}
+
+function loadSettingsUI() {
+  const s = getSettings();
+  document.getElementById('set-phone').value = s.phone;
+  document.getElementById('set-hotel').value = s.hotel;
+  document.getElementById('set-price').value = s.drinkPrice;
+  document.getElementById('set-barfine').value = s.barfinePrice;
+  document.getElementById('set-ladydrink').value = s.ladydrinkPrice;
+  document.getElementById('set-hell').value = s.hellPrice;
+  document.getElementById('set-rate').value = s.rate;
+}
+
+// ── NAVIGATION ──
+function showScreen(name) {
+  document.querySelectorAll('.screen, .overlay').forEach(el => el.classList.remove('active'));
+  if (name === 'main') {
+    document.getElementById('screen-main').classList.add('active');
+  } else if (name === 'settings') {
+    loadSettingsUI();
+    document.getElementById('screen-settings').classList.add('active');
+  } else if (name === 'where') {
+    document.getElementById('screen-where').classList.add('active');
+    loadWhereAmI();
+  } else if (name === 'drinks') {
+    document.getElementById('screen-drinks').classList.add('active');
+    updateDrinksUI();
+  }
+}
+
+// ── TOAST ──
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── GPS HELPER ──
+function getPosition() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error('Geolocation non supportée'));
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      err => reject(err),
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 }
+    );
+  });
+}
+
+// ── 1. PANIC BUTTON ──
+async function panicButton() {
+  const s = getSettings();
+  if (!s.phone) {
+    toast('Configure ton numéro d\'urgence dans Settings !');
+    showScreen('settings');
+    return;
+  }
+
+  toast('Recherche GPS...');
+  try {
+    const pos = await getPosition();
+    const mapUrl = `https://maps.google.com/?q=${pos.lat},${pos.lng}`;
+    const msg = encodeURIComponent(`SOS — Je suis ici : ${mapUrl}`);
+    const smsUrl = `sms:${s.phone}?body=${msg}`;
+    window.location.href = smsUrl;
+
+    // Fallback WhatsApp after 2s
+    setTimeout(() => {
+      const waPhone = s.phone.replace(/[^0-9]/g, '');
+      const waUrl = `https://wa.me/${waPhone}?text=${msg}`;
+      window.location.href = waUrl;
+    }, 2000);
+  } catch (err) {
+    toast('Erreur GPS : ' + err.message);
+  }
+}
+
+// ── 2. WHERE AM I ──
+async function loadWhereAmI() {
+  const container = document.getElementById('where-content');
+  container.innerHTML = '<div class="status-msg"><div class="spinner"></div><br>Recherche GPS...</div>';
+
+  try {
+    const pos = await getPosition();
+
+    // Reverse geocoding via Nominatim (free, no API key)
+    let addrThai = `${pos.lat.toFixed(6)}, ${pos.lng.toFixed(6)}`;
+    let addrEn = '';
+
+    try {
+      const resp = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${pos.lat}&lon=${pos.lng}&format=json&accept-language=th&addressdetails=1`,
+        { headers: { 'User-Agent': 'BangkokSurvivalKit/1.0' } }
+      );
+      const data = await resp.json();
+      if (data.display_name) addrThai = data.display_name;
+
+      // Also get English version
+      const resp2 = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${pos.lat}&lon=${pos.lng}&format=json&accept-language=en&addressdetails=1`,
+        { headers: { 'User-Agent': 'BangkokSurvivalKit/1.0' } }
+      );
+      const data2 = await resp2.json();
+      if (data2.display_name) addrEn = data2.display_name;
+    } catch (e) {
+      addrEn = 'Reverse geocoding indisponible';
+    }
+
+    container.innerHTML = `
+      <div class="thai-address">
+        <div class="addr" id="thai-text">${addrThai}</div>
+        <div class="addr-en">${addrEn}</div>
+      </div>
+      <button class="btn-action btn-copy" onclick="copyAddress()">Copier l'adresse</button>
+      <button class="btn-action btn-gmaps" onclick="window.open('https://maps.google.com/?q=${pos.lat},${pos.lng}','_blank')" style="margin-top:12px">Ouvrir Google Maps</button>
+    `;
+  } catch (err) {
+    container.innerHTML = `<div class="status-msg">Erreur GPS : ${err.message}<br><br>Vérifie les permissions de localisation.</div>`;
+  }
+}
+
+function copyAddress() {
+  const text = document.getElementById('thai-text')?.textContent;
+  if (text && navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => toast('Adresse copiée !')).catch(() => toast('Erreur copie'));
+  } else {
+    toast('Copie non disponible');
+  }
+}
+
+// ── 3. TAKE ME HOME ──
+async function takeHome() {
+  const s = getSettings();
+  if (!s.hotel) {
+    toast('Configure ton adresse dans Settings !');
+    showScreen('settings');
+    return;
+  }
+
+  toast('Recherche GPS...');
+  try {
+    const pos = await getPosition();
+    const pickupLatLng = `${pos.lat},${pos.lng}`;
+    const dropoff = encodeURIComponent(s.hotel);
+
+    // Try Grab deep link first
+    const grabUrl = `grab://open?screenType=BOOKING&pickupLatLng=${pickupLatLng}&dropoffAddress=${dropoff}`;
+    window.location.href = grabUrl;
+
+    // Fallback to Google Maps after 1.5s
+    setTimeout(() => {
+      const gmapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${pos.lat},${pos.lng}&destination=${encodeURIComponent(s.hotel)}&travelmode=driving`;
+      window.open(gmapsUrl, '_blank');
+    }, 1500);
+  } catch (err) {
+    // If GPS fails, at least open Google Maps with destination
+    const gmapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(s.hotel)}&travelmode=driving`;
+    window.open(gmapsUrl, '_blank');
+  }
+}
+
+// ── 4. DRINKS COUNTER ──
+const categories = [
+  { id: 'drink',    name: 'Drinks',                  icon: '&#127866;', priceKey: 'drinkPrice',    count: 0 },
+  { id: 'barfine',  name: 'Barfine',                 icon: '&#128176;', priceKey: 'barfinePrice',  count: 0 },
+  { id: 'ladydrink',name: 'Lady Drink',              icon: '&#127864;', priceKey: 'ladydrinkPrice',count: 0 },
+  { id: 'hell',     name: 'Hell what did I do???',    icon: '<img src="erwan.jpg" alt="Erwan">', priceKey: 'hellPrice',     count: 0 },
+];
+
+function changeCategory(id, delta) {
+  const cat = categories.find(c => c.id === id);
+  if (cat) cat.count = Math.max(0, cat.count + delta);
+  updateDrinksUI();
+}
+
+function resetDrinks() {
+  categories.forEach(c => c.count = 0);
+  updateDrinksUI();
+  toast('Compteur remis a zero !');
+}
+
+function updateDrinksUI() {
+  const s = getSettings();
+  const container = document.getElementById('drinks-categories');
+  let grandTotal = 0;
+
+  container.innerHTML = categories.map(cat => {
+    const price = s[cat.priceKey] || 0;
+    const subtotal = cat.count * price;
+    grandTotal += subtotal;
+    return `
+      <div class="category-row">
+        <span class="category-icon">${cat.icon}</span>
+        <div class="category-info">
+          <div class="category-name">${cat.name}</div>
+          <div class="category-sub">${price.toLocaleString()} THB x ${cat.count} = ${subtotal.toLocaleString()} THB</div>
+        </div>
+        <div class="category-count">${cat.count}</div>
+        <div class="cat-btns">
+          <button class="cat-btn-plus" onclick="changeCategory('${cat.id}',1)">+</button>
+          <button class="cat-btn-minus" onclick="changeCategory('${cat.id}',-1)">&minus;</button>
+        </div>
+      </div>`;
+  }).join('');
+
+  const eur = (grandTotal * s.rate).toFixed(2);
+  document.getElementById('grand-total').textContent = grandTotal.toLocaleString() + ' THB';
+  document.getElementById('grand-total-eur').textContent = eur + ' EUR';
+}
+
+// ── 5. LADYBOY ──
+function showLadyboy() {
+  document.getElementById('ladyboy-overlay').classList.add('active');
+}
+function hideLadyboy() {
+  document.getElementById('ladyboy-overlay').classList.remove('active');
+}
+
+// ── SERVICE WORKER ──
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@
   "name": "Bangkok Survival Kit",
   "short_name": "BKK Survival",
   "description": "Kit de survie pour expat à Bangkok — Panic button, GPS, Grab, compteur de drinks",
-  "start_url": "/index.html",
+  "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#111111",

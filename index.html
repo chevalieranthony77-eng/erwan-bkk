@@ -999,15 +999,18 @@ function toast(msg) {
 }
 
 // ── GPS HELPER ──
+// Fallback: Khao San Road, Bangkok
+const DEFAULT_POS = { lat: 13.7590, lng: 100.4974 };
+
 function getPosition() {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     if (!navigator.geolocation) {
-      reject(new Error('Geolocation non supportée'));
+      resolve(DEFAULT_POS);
       return;
     }
     navigator.geolocation.getCurrentPosition(
       pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-      err => reject(err),
+      () => resolve(DEFAULT_POS),
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 }
     );
   });
